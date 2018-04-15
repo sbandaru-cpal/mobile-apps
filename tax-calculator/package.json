@@ -20,7 +20,13 @@
   },
   "dependencies": {
     "expo": "^26.0.0",
+    "prop-types": "^15.6.1",
     "react": "16.3.0-alpha.1",
-    "react-native": "0.54.0"
+    "react-native": "0.54.0",
+    "react-native-button": "^2.3.0",
+    "react-native-chooser": "^1.7.0",
+    "react-native-selectme": "^1.2.3",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^1.5.11"
   }
 }
