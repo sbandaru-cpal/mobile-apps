@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 import Footer from '../components/Footer';
+import Api from '../utilities/api';
 
 export default class Search extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class Search extends Component {
     this.state = {
       amount: '',
       stateCode:'Select State',
+      states : []
     };
   }
   handleAmount = (text) => {
@@ -25,7 +27,15 @@ export default class Search extends Component {
   }
 
   onSelect(value, label) {
-    this.setState({value : value});
+    this.setState({stateCode : value});
+  }
+
+  componentDidMount(){
+    Api.getStates().then((res) => {
+      this.setState({
+        states : res
+      })
+    });
   }
 
   render() {
@@ -49,11 +59,9 @@ export default class Search extends Component {
             backdropStyle  = {{backgroundColor : "#ffaf40"}}
             optionListStyle = {{backgroundColor : "#F5FCFF"}}
           >
-          <Option value = "MI">Michigan</Option>
-          <Option value = "OH">Ohio</Option>
-          <Option value = "RI">Rhode Island</Option>
-          <Option value = "MD">Maryland</Option>
-          <Option value = "TN">Tennesse</Option>
+          { this.state.states.map((item, key)=>(
+            <Option value = {item.code}>{item.value}</Option>)
+            )}
         </Select>
         <Text style={{height: 10}} />
         <Button
