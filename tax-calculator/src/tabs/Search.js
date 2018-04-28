@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 import Footer from '../components/Footer';
-import Api from '../utilities/api';
+import Api from '../utilities/Api';
 
 export default class Search extends Component {
   constructor(props) {
@@ -23,11 +23,20 @@ export default class Search extends Component {
     };
   }
   handleAmount = (text) => {
-   this.setState({ amount: text })
+   this.setState({ amount: text})
   }
 
   onSelect(value, label) {
     this.setState({stateCode : value});
+  }
+
+  search() {
+    Api.calculate(this.state.stateCode, this.state.amount).then((res) => {
+      this.props.navigation.navigate('Result', { 
+        state: this.state.stateCode, 
+        amount: this.state.amount,
+        totalAmount: res })
+    });
   }
 
   componentDidMount(){
@@ -45,6 +54,7 @@ export default class Search extends Component {
         <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <View style={styles.landingPage}>
         <TextInput style = {styles.inputStyle}
+               keyboardType='numeric'
                underlineColorAndroid = "transparent"
                placeholder = "Enter Amount"
                placeholderTextColor = "#4F8EF7"
@@ -57,7 +67,7 @@ export default class Search extends Component {
             style = {styles.inputStyle}
             textStyle = {{color:"#4F8EF7"}}
             backdropStyle  = {{backgroundColor : "#ffaf40"}}
-            optionListStyle = {{backgroundColor : "#F5FCFF"}}
+            optionListStyle = {{backgroundColor : "#4F8EF7"}}
           >
           { this.state.states.map((item, key)=>(
             <Option value = {item.code}>{item.value}</Option>)
@@ -67,7 +77,7 @@ export default class Search extends Component {
         <Button
           containerStyle={styles.calculateButton}
           disabledContainerStyle={{backgroundColor: 'grey'}}
-          onPress={() => navigate('Result', { state: this.state.stateCode, amount: this.state.amount })}
+          onPress={this.search.bind(this)}
           style={{fontSize: 20, color: '#4F8EF7'}}>
           Calculate
         </Button>
@@ -91,21 +101,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  footer: {
-    flex: 0.05,
-    alignItems: 'center'
-  },
   inputStyle: {
     fontSize: 30,
     fontWeight: 'bold',
-    borderWidth : 0.5, 
+    borderBottomWidth : 0.5, 
+    borderWidth: 0,
     borderColor : "#4F8EF7",
+    color : "#4F8EF7",
     height:35,
     width: 300
-  },
-  footerText: {
-    color: '#b22222',
-    fontSize:20
   },
   calculateButton: {
     padding:10, 
