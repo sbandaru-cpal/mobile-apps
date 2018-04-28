@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {Select, Option} from "react-native-chooser";
 import Button from 'react-native-button';
 import {
   TouchableHighlight,
@@ -7,6 +6,7 @@ import {
   Text,
   View,
   TextInput,
+  Picker
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 import Footer from '../components/Footer';
@@ -18,29 +18,48 @@ export default class Search extends Component {
 
     this.state = {
       amount: '',
-      stateDescription:'Select State',
+      stateDescription:'',
       stateCode: '',
-      states : []
+      states : [],
+      amountValid: true,
+      stateValid: true
     };
   }
   handleAmount = (text) => {
-   this.setState({ amount: text})
+    if(text !== '') {
+      this.setState({ amount: text, amountValid: true})
+    }else {
+      this.setState({ amount: '', amountValid : false})
+    }
+   
   }
 
   onSelect(value, label) {
-    this.setState({
-      stateCode : value,
-      stateDescription: label
-    });
+    if(value !== ''){
+      this.setState({
+        stateCode : value,
+        stateDescription: value,
+        stateValid:true
+      });
+    }else{
+      this.setState({
+        stateCode : '',
+        stateDescription: '',
+        stateValid: false
+      });
+    }
+    
   }
 
   search() {
-    Api.calculate(this.state.stateCode, this.state.amount).then((res) => {
-      this.props.navigation.navigate('Result', { 
-        state: this.state.stateCode, 
-        amount: this.state.amount,
-        totalAmount: res })
-    });
+    if(this.state.stateValid && this.state.amountValid) {
+      Api.calculate(this.state.stateCode, this.state.amount).then((res) => {
+        this.props.navigation.navigate('Result', { 
+          state: this.state.stateCode, 
+          amount: this.state.amount,
+          totalAmount: res })
+      });
+    }
   }
 
   componentDidMount(){
@@ -57,27 +76,33 @@ export default class Search extends Component {
       <View style={styles.container}>
         <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <View style={styles.landingPage}>
-        <TextInput style = {styles.inputStyle}
+        <TextInput style = {[styles.inputStyle, !this.state.amountValid ? styles.errorBorder: null]}
                keyboardType='numeric'
                underlineColorAndroid = "transparent"
+               textAlign = "center"
                placeholder = "Enter Amount"
                placeholderTextColor = "#4F8EF7"
                autoCapitalize = "none"
                onChangeText = {this.handleAmount}/>
+        <Text style={styles.errorText}>
+          {!this.state.amountValid ? 'amount cannot be blank' :null}
+        </Text>
         <Text style={{height: 10}} />
-        <Select
-            onSelect = {this.onSelect.bind(this)}
-            defaultText = {this.state.stateDescription}
-            style = {styles.inputStyle}
-            textStyle = {{color:"#4F8EF7"}}
-            backdropStyle  = {{backgroundColor : "#ffaf40"}}
-            optionListStyle = {{backgroundColor : "#4F8EF7"}}
-          >
+        <Picker
+          selectedValue={this.state.stateDescription}
+          itemStyle={{height: 44, color: "#4F8EF7"}}
+          style={[styles.inputStyle, !this.state.stateValid ? styles.errorBorder: null]}
+          onValueChange={this.onSelect.bind(this)}>
+            <Picker.Item label='Select State' value="" />
           { this.state.states.map((item, key)=>(
-            <Option value = {item.code}>{item.value}</Option>)
-            )}
-        </Select>
-        <Text style={{height: 10}} />
+            <Picker.Item label={item.value} value={item.code} />
+            )
+          )}
+        </Picker>   
+        <Text style={styles.errorText}>
+          {!this.state.stateValid ? 'state cannot be blank' :null}
+        </Text>    
+        <Text style={{height: 10}} /> 
         <Button
           containerStyle={styles.calculateButton}
           disabledContainerStyle={{backgroundColor: 'grey'}}
@@ -122,5 +147,11 @@ const styles = StyleSheet.create({
     overflow:'hidden', 
     borderRadius:4, 
     backgroundColor: 'white'
+  },
+  errorBorder: {
+    borderColor: 'red'
+  },
+  errorText: {
+    color: 'red'
   }
 });
