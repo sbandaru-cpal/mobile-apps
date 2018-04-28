@@ -18,7 +18,8 @@ export default class Search extends Component {
 
     this.state = {
       amount: '',
-      stateCode:'Select State',
+      stateDescription:'Select State',
+      stateCode: '',
       states : []
     };
   }
@@ -27,7 +28,10 @@ export default class Search extends Component {
   }
 
   onSelect(value, label) {
-    this.setState({stateCode : value});
+    this.setState({
+      stateCode : value,
+      stateDescription: label
+    });
   }
 
   search() {
@@ -63,7 +67,7 @@ export default class Search extends Component {
         <Text style={{height: 10}} />
         <Select
             onSelect = {this.onSelect.bind(this)}
-            defaultText  = {this.state.stateCode}
+            defaultText = {this.state.stateDescription}
             style = {styles.inputStyle}
             textStyle = {{color:"#4F8EF7"}}
             backdropStyle  = {{backgroundColor : "#ffaf40"}}
