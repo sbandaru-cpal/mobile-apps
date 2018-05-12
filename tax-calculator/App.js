@@ -33,7 +33,10 @@ const SearchTab = StackNavigator({
     navigationOptions: ({ navigation }) => ({
       // Customize header's title with user name passed to navigate()
       // You can pass any props you'd like. For instance: navigate('Result', { user: 'Tom' }
-      title: `Search Result`,
+      title: 'Search Result',
+      headerStyle: {
+        backgroundColor: '#8395a7',
+      }
     }),
   },
 }, {
