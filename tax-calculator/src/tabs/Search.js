@@ -57,7 +57,7 @@ export default class Search extends Component {
         this.props.navigation.navigate('Result', { 
           state: this.state.stateCode, 
           amount: this.state.amount,
-          totalAmount: res })
+          totalAmount: res.totalAmount })
       });
     }
   }
