@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   calculateButton: {
     padding:10, 
-    with:150,
+    width:150,
     height:45, 
     overflow:'hidden', 
     borderRadius:4, 
