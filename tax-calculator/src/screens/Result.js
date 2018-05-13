@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
   searchResultView: {
     backgroundColor: '#8395a7',
     alignItems: 'center',
-    justifyContent: 'top',
     height: 150
   },
   allStatesResultView: {
